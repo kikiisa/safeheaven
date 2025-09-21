@@ -1,0 +1,26 @@
+/* src/assets/nprogress.css */
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: hsl(0 0% 3.9%) !important; /* warna progress */
+  position: fixed;
+  top: 0;             /* posisi atas */
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 99999;     /* pastikan di atas semua elemen */
+}
+
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  
+  width: 100px;
+  height: 100%;
+  box-shadow: hsl(0 0% 3.9%);
+  opacity: 1;
+  transform: rotate(3deg) translate(0px, -4px);
+}
