@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { login } from "@/lib/Api/Auth";
 import { toast } from "vue-sonner";
 import { useForm } from "@tanstack/vue-form";
-import { validateEmail, validatePassword } from "@/lib/validations";
+import { validateEmail, validatePassword } from "@/lib/Validations/LoginValidations";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
 const auth = useAuthStore();
