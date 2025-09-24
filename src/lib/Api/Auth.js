@@ -2,21 +2,21 @@ import api from "../services"
 
 export const login = async (data) => {
     try {
-        const reponse = await api.post('login', data)
-        return reponse
+        const response = await api.post('login', data)
+        if(response.status == 200)
+        {
+            api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`
+        }
+        return response
     } catch(error) 
     {
         return error
     }
 }
 
-export const logout = async (token) => {
+export const logout = async () => {
     try {
-        const reponse = await api.post('logout', {},{
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        })
+        const reponse = await api.post('logout')
         return reponse
     } catch(error) 
     {
@@ -24,7 +24,7 @@ export const logout = async (token) => {
     }
 }
 
-export const me = async () => {
+export const profile = async () => {
     try {
         const reponse = await api.get('me')
         return reponse

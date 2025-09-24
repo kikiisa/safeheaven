@@ -6,7 +6,6 @@ import {
     CardContent,
     CardDescription,
     CardHeader,
-
     CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -42,8 +41,9 @@ const form = useForm({
             form.reset();
             
         } catch (e) {
-            if (e) {
-                toast.error(e.response.data.message);
+            if (e.response.data.errors) {
+                const firstError = Object.values(e.response.data.errors)[0][0];
+                toast.error(firstError);
             }
         }
     }
@@ -118,7 +118,7 @@ const form = useForm({
                                     <Label :for="field.name">Password</Label>
                                     <Input :class="state.meta.errors[0] ? 'border-red-500 border-2' : ''"
                                         @blur="field.handleBlur" @input="field.handleChange($event.target.value)"
-                                        :id="field.name" :name="field.name" :value="state.value" type="text"
+                                        :id="field.name" :name="field.name" :value="state.value" type="password"
                                         placeholder="*************" required />
 
                                     <small v-if="state.meta.errors.length" class="text-red-500">

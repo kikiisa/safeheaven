@@ -1,20 +1,15 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import {ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import {toast} from 'vue-sonner'
 import { logout } from '@/lib/Api/Auth';
+import { useRouter } from 'vue-router';
 
+
+const router = useRouter();
 const auth = useAuthStore();
-// User data - bisa diganti dengan props atau dari store
-const user = ref({
-  name: auth.user ? auth.user.name : 'Guest',
-  avatar: 'https://cdn-icons-png.flaticon.com/128/4140/4140037.png',
-  role: 'Mahasiswa',
-})
 
-onMounted(() => {
-  auth.loadAuth();
-})
+
 
 // Dropdown state
 const showDropdown = ref(false)
@@ -26,10 +21,12 @@ const toggleDropdown = () => {
 const handleLogout = async () => {
   // Handle logout logic here
   const token = auth.token;
-  const res = await logout(token);
+  const res = await logout();
   if(res.status == 200) {
-    auth.logout()
+    auth.logout(token);
     toast.success(res.data.message);
+    return router.push({name:"login"})
+
   }
   showDropdown.value = false
 }
@@ -44,6 +41,13 @@ const handleProfile = () => {
 const closeDropdown = () => {
   showDropdown.value = false
 };
+// User data - bisa diganti dengan props atau dari store
+const user = ref({
+  name: auth.user ? auth.user.name : 'Guest',
+  avatar: 'https://cdn-icons-png.flaticon.com/128/4140/4140037.png',
+  role: 'Mahasiswa',
+})
+
 </script>
 <template>
   <header class="relative bg-gradient-to-r from-green-400 to-green-400 p-4 rounded-b-xl shadow-lg lg:w-1/3 mx-auto">
@@ -52,7 +56,8 @@ const closeDropdown = () => {
       <div class="flex-1">
         <div class="flex items-center gap-2 mb-1">
           <h1 class="font-bold text-white text-xl">
-            Safeheaven 
+            Safeheaven  
+
             <span class="text-xs text-green-100 font-normal ml-1">v.1.0</span>
           </h1>
           <!-- App Icon/Logo (optional) -->

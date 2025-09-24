@@ -5,14 +5,16 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import Button from '@/components/ui/button/Button.vue';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table/'
 import Badge from '@/components/ui/badge/Badge.vue';
+import BaseModal from '@/components/ui/modal/baseModal.vue';
+import SosForm from '@/components/SosForm.vue';
 </script>
 <template>
     <HeaderDashboard />
@@ -67,7 +69,15 @@ import Badge from '@/components/ui/badge/Badge.vue';
                     Kekerasan Seksual), khususnya di lingkungan akademis seperti Universitas Negeri Gorontalo (UNG).
                 </AlertDescription>
             </Alert>
-            <Button class="w-full bg-green-400 mt-3 cursor-pointer">Lapor Sekarang <i class="pi pi-send"></i></Button>
+            <BaseModal title="Layanan SOS" description="Untuk mendapatkan bantuan dalam keadaan darurat.">
+            <!-- Body -->
+            <SosForm/>    
+
+            <!-- Trigger -->
+            <template #trigger>
+                <Button class="w-full bg-green-400 mt-3 cursor-pointer">Lapor Sekarang <i class="pi pi-send"></i></Button>
+            </template>
+        </BaseModal>
         </div>
         <Card class="w-full mt-4">
             <CardHeader>
@@ -87,20 +97,30 @@ import Badge from '@/components/ui/badge/Badge.vue';
                     <TableBody>
                         <TableRow>
                             <TableCell>Polisi</TableCell>
-                            <TableCell><Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i> 08123456789</Badge></TableCell>
+                            <TableCell>
+                                <Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i>
+                                    08123456789</Badge>
+                            </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>PPA</TableCell>
-                            <TableCell><Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i> 08123456789</Badge></TableCell>
+                            <TableCell>
+                                <Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i>
+                                    08123456789</Badge>
+                            </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>Admin Desa</TableCell>
-                            <TableCell><Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i> 08123456789</Badge> </TableCell>
+                            <TableCell>
+                                <Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i>
+                                    08123456789</Badge>
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
             </CardContent>
         </Card>
+        
     </main>
     <Bottom />
 </template>
