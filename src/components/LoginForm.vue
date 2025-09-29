@@ -30,7 +30,7 @@ const form = useForm({
       email: values.value.email,
       password: values.value.password
     })
-    
+    console.log(response);
     if(response.status == 200) {
       toast.success(response.data.message);
       form.reset();

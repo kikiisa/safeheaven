@@ -15,6 +15,10 @@ import {
 import Badge from '@/components/ui/badge/Badge.vue';
 import BaseModal from '@/components/ui/modal/baseModal.vue';
 import SosForm from '@/components/SosForm.vue';
+const open = defineModel('open', { type: Boolean, default: false })
+const handleClose = () => {
+    open.value = false
+}
 </script>
 <template>
     <HeaderDashboard />
@@ -69,15 +73,11 @@ import SosForm from '@/components/SosForm.vue';
                     Kekerasan Seksual), khususnya di lingkungan akademis seperti Universitas Negeri Gorontalo (UNG).
                 </AlertDescription>
             </Alert>
-            <BaseModal title="Layanan SOS" description="Untuk mendapatkan bantuan dalam keadaan darurat.">
-            <!-- Body -->
-            <SosForm/>    
-
-            <!-- Trigger -->
-            <template #trigger>
-                <Button class="w-full bg-green-400 mt-3 cursor-pointer">Lapor Sekarang <i class="pi pi-send"></i></Button>
-            </template>
-        </BaseModal>
+            <Button @click="open = true" class="w-full bg-green-400 mt-3 cursor-pointer">Lapor Sekarang <i class="pi pi-send"></i></Button>
+            <BaseModal :open="open" title="Layanan SOS" @close="handleClose"
+                description="Untuk mendapatkan bantuan dalam keadaan darurat.">
+                <SosForm/>
+            </BaseModal>
         </div>
         <Card class="w-full mt-4">
             <CardHeader>
@@ -120,7 +120,7 @@ import SosForm from '@/components/SosForm.vue';
                 </Table>
             </CardContent>
         </Card>
-        
+
     </main>
     <Bottom />
 </template>
