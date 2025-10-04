@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
 // Active tab state
 const activeTab = ref('home')
 
@@ -10,9 +11,6 @@ const setActiveTab = (tab) => {
 <template>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 safe-area-pb lg:w-1/3 mx-auto rounded-t-xl">
     <div class="flex justify-around items-center px-2 py-1">
-      <!-- Home Tab -->
-      
-      <!-- Profile Tab -->
       <button 
       @click="setActiveTab('profile')"
       :class="[
@@ -39,7 +37,8 @@ const setActiveTab = (tab) => {
       <span class="text-xs font-medium truncate">Profile</span>
     </button>
     
-    <button 
+    <RouterLink 
+      :to="{ name: 'beranda' }" 
       @click="setActiveTab('home')"
       :class="[
         'flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1 transition-colors duration-200',
@@ -63,7 +62,7 @@ const setActiveTab = (tab) => {
         ></div>
       </div>
       <span class="text-xs font-medium truncate">Home</span>
-    </button>
+    </RouterLink>
       <!-- Logout Tab (dengan style berbeda) -->
       <button 
         @click="setActiveTab('logout')"

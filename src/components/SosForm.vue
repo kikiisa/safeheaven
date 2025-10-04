@@ -70,7 +70,6 @@ const form = useForm({
                     // console.log('Mencoba mengosongkan elemen input file:', imageInput.value);
                     imageInput.value.value = null;
                 }
-
                 loading.value = false;
             } else if (response.status === 422) {
                 toast.error(response.response.data.message);
