@@ -147,7 +147,7 @@ const form = useForm({
                     <Label :for="field.name">Lampiran Foto</Label>
 
                     <input ref="imageInput" type="file" accept="image/*" :id="field.name" :name="field.name" class="w-full border border-gray-300 rounded-md px-3 py-2 truncate
-           focus:outline-none focus:ring-2 focus:ring-blue-500
+           focus:outline-none focus:ring-2 focus:ring-red-500
            transition-colors" :class="state.meta.errors[0] ? 'border-red-500' : ''"
                         @change="(e) => field.handleChange(e.target.files[0])" @blur="field.handleBlur" />
 
@@ -155,10 +155,11 @@ const form = useForm({
                         {{ state.meta.errors[0] }}
                     </small>
                 </form.Field>
-                <Button class="w-full mt-4 bg-green-400 cursor-pointer" :disabled="loading">
+                <Button class="w-full mt-4 bg-red-600 cursor-pointer" :disabled="loading">
                     <span v-if="loading">Mengirim..... <i class="pi pi-spin pi-spinner"></i></span>
                     <span class="font-bold" v-else>Kirim Pesan S.O.S <i class="pi pi-send"></i></span>
                 </Button>
+                
             </div>
         </form>
     </section>

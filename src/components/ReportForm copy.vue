@@ -1,0 +1,198 @@
+<script setup>
+import Label from '@/components/ui/label/Label.vue';
+import Textarea from './ui/textarea/Textarea.vue';
+import Button from './ui/button/Button.vue';
+import { reactive, ref, watch } from 'vue'; // Import 'watch'
+import { toast } from 'vue-sonner'
+import Input from './ui/input/Input.vue';
+import { useQuery } from '@tanstack/vue-query';
+import { createReportQuestion, Question } from '@/lib/Api/Question';
+import { useForm } from '@tanstack/vue-form';
+import { validateNamaPelaku, ValidateTempat, Validatewaktu } from '@/lib/Validations/ReportValidations';
+
+// --- Data Fetching ---
+const { isLoading, data } = useQuery({
+    queryKey: ['Question'],
+    queryFn: Question
+});
+
+// --- State ---
+const loading = ref(false)
+
+// --- Form Setup ---
+const form = useForm({
+    defaultValues: {
+        nama_pelaku: "",
+        waktu_kejadian: "",
+        tanggal_kejadian: "",
+        tempat_kejadian: "",
+        answers: [], // Initial empty array, will be populated on data load
+    },
+    onSubmit: async (values) => {
+        loading.value = true;
+        
+        try {
+            // Ensure you are using the correct structure for your API call.
+            // Assuming your API expects a flat object payload:
+            const formData = new FormData();
+            formData.append('nama_pelaku', values.value.nama_pelaku);
+            formData.append('waktu_kejadian', values.value.waktu_kejadian);
+            formData.append('tanggal_kejadian', values.value.tanggal_kejadian);
+            formData.append('tempat_kejadian', values.value.tempat_kejadian);
+              values.value.answers.forEach((ans, index) => {
+                formData.append(`answers[${index}][report_questions_id]`, ans.report_questions_id);
+                formData.append(`answers[${index}][answer]`, ans.answer);
+            });
+            const response = await createReportQuestion(formData);
+            
+            toast.success(response.data.message);
+            form.reset();
+            
+            initializeDefaultAnswers(data.value?.data?.data);
+            loading.value = false;
+        } catch (e) {
+            
+            const errorMessage = e.response?.data?.message || "Terjadi kesalahan saat mengirim laporan.";
+            toast.error(errorMessage);
+            loading.value = false;
+        }
+        console.log(values)
+    }
+});
+
+
+const initializeDefaultAnswers = (questions) => {
+    if (questions && questions.length > 0) {
+        const defaultAnswers = questions.map(q => ({
+            report_questions_id: q.id,
+            answer: "tidak" // Default answer for all questions
+        }));
+        // Use setFieldValue to update the 'answers' array in the form state
+        form.setFieldValue('answers', defaultAnswers);
+    }
+}
+
+// Watch for the API data to load and initialize the default answers
+watch(data, (newData) => {
+    if (newData?.data?.data) {
+        initializeDefaultAnswers(newData.data.data);
+    }
+}, { immediate: true }); // Run immediately if data is already available
+
+ const toggleAnswer = (questionId, isChecked, handleChange, currentAnswers) => {
+    // Find the index of the answer to modify
+    const answerIndex = currentAnswers.findIndex(item => item.report_questions_id === questionId);
+    
+    if (answerIndex !== -1) {
+        // Create a copy of the current answers array
+        const newAnswers = [...currentAnswers];
+        
+        // Update the 'answer' property of the specific item
+        newAnswers[answerIndex] = {
+            ...newAnswers[answerIndex],
+            answer: isChecked ? "ya" : "tidak" // Set to "ya" if checked, "tidak" if unchecked
+        };
+        
+        // Update the form field value
+        handleChange(newAnswers);
+    } 
+}
+</script>
+
+<template>
+    <section class="flex justify-center">
+        <form class="w-full flex flex-col gap-3" @submit.prevent="form.handleSubmit">
+            
+            <div class="form-group grid grid-cols-1 gap-2">
+                <form.Field name="nama_pelaku" v-slot="{ field, state }"
+                    :validators="{ onBlur: ({ value }) => validateNamaPelaku({ value }) }">
+                    <Label :for="field.name">Nama Pelaku</Label>
+                    <Input :class="state.meta.errors[0] ? 'border-red-500 border-1' : ''"
+                        placeholder="Masukkan Nama Pelaku" class="w-full" :id="field.name" :name="field.name"
+                        :value="state.value" @input="field.handleChange($event.target.value)" @blur="field.handleBlur">
+                    </Input>
+                    <small v-if="state.meta.errors.length" class="text-red-500">
+                        {{ state['meta'].errors[0] }}
+                    </small>
+                </form.Field>
+            </div>
+            
+            <div class="form-group grid grid-cols-1 gap-2">
+                <form.Field name="waktu_kejadian" v-slot="{ field, state }"
+                    :validators="{ onBlur: ({ value }) => Validatewaktu({ value }) }"> 
+                    <label :for="field.name" class="text-sm font-medium text-gray-700">Pilih Waktu</label>
+                    <Input :id="field.name" :name="field.name" :value="state.value"
+                        @input="field.handleChange($event.target.value)" @blur="field.handleBlur" type="time"
+                        :class="state.meta.errors[0] ? 'border-red-500 border-1' : 'w-full rounded border-1 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200'" />
+                    <small v-if="state.meta.errors.length" class="text-red-500">
+                        {{ state['meta'].errors[0] }}
+                    </small>
+                </form.Field>
+            </div>
+            
+            <div class="form-group grid grid-cols-1 gap-2">
+                <form.Field name="tempat_kejadian" v-slot="{ field, state }"
+                    :validators="{ onBlur: ({ value }) => ValidateTempat({ value }) }">
+                    <Label :for="field.name">Lokasi Kejadian</Label>
+                    <Textarea :class="state.meta.errors[0] ? 'border-red-500 border-1' : ''"
+                        placeholder="Masukkan Lokasi Kejadian" class="w-full" :id="field.name" :name="field.name"
+                        :value="state.value" @input="field.handleChange($event.target.value)" @blur="field.handleBlur">
+                    </Textarea>
+                    <small v-if="state.meta.errors.length" class="text-red-500">
+                        {{ state['meta'].errors[0] }}
+                    </small>
+                </form.Field>
+            </div>
+            
+            <div class="form-group grid grid-cols-1 gap-2">
+                <form.Field name="tanggal_kejadian" v-slot="{ field, state }"
+                    :validators="{ onBlur: ({ value }) => ValidateTempat({ value }) }"> 
+                    <Label :for="field.name">Tanggal Kejadian</Label>
+                    <Input :class="state.meta.errors[0] ? 'border-red-500 border-1' : ''" type="date" :id="field.name"
+                        :name="field.name" :value="state.value" @input="field.handleChange($event.target.value)"
+                        @blur="field.handleBlur"></Input>
+                    <small v-if="state.meta.errors.length" class="text-red-500">
+                        {{ state['meta'].errors[0] }}
+                    </small>
+                </form.Field>
+            </div>
+
+            <form.Field name="answers" v-slot="{ field, state }">
+                <div class="question" v-if="data?.data?.data">
+                    <div class="head-question flex-col justify-center text-center mb-3 mt-3">
+                        <h1 class="font-bold text-xl"><span class="pi pi-tags"></span> Pertanyaan Verbal</h1>
+                        <span
+                            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Silahkan
+                            pilih jawaban yang sesuai</span>
+                    </div> 
+                    
+                    <div class="items-top flex gap-3 py-3 border-2 rounded-xl p-4" 
+                        v-for="question in data.data.data" :key="question.id">
+                        
+                        <input  
+                            type="checkbox" 
+                            :id="`question-${question.id}`"
+                            :name="field.name"
+                            
+                            :checked="state.value.find(item => item.report_questions_id === question.id)?.answer === 'ya'"
+                            
+                            @change="e => toggleAnswer(question.id, e.target.checked, field.handleChange, state.value)" 
+                        />
+                        
+                        <div class="grid gap-1.5 leading-none">
+                            <label :for="`question-${question.id}`"
+                                class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                {{ question.question }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form.Field>
+
+            <Button class="w-full mt-4 bg-green-400 cursor-pointer" :disabled="loading">
+                <span v-if="loading">Mengirim..... <i class="pi pi-spin pi-spinner"></i></span>
+                <span class="font-bold" v-else>Kirim Laporan <i class="pi pi-send"></i></span>
+            </Button>
+        </form>
+    </section>
+</template>

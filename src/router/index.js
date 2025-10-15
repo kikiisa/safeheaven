@@ -7,6 +7,10 @@ import NotFound from '@/NotFound.vue'
 import Dashboard from '@/views/Menu/Dashboard.vue'
 import Index from '@/views/reading/Index.vue'
 import { useAuthStore } from '@/stores/auth'
+import Detail from '@/views/reading/Detail.vue'
+import Sos from '@/views/sos/Sos.vue'
+import Report from '@/views/report/Report.vue'
+import Health from '@/views/health/Health.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,6 +44,39 @@ const router = createRouter({
       name:"reading",
       component:Index,
       meta: {
+        layout: 'default'
+      },
+    },
+    {
+      path:"/reading/:slug",
+      name:"detailartikel",
+      component:Detail,
+      meta: {
+        layout: 'default'
+      },
+    },
+    {
+      'path':'/health',
+      name:'health',
+      component:Health,
+      meta: {
+        layout: 'default'
+      }
+    },
+    
+    {
+      path:"/report",
+      name:"report",
+      component:Report,
+      meta: {
+        layout: 'default'
+      }
+    },
+    {
+      path:"/sos",
+      name:"sos",
+      component:Sos,
+      meta:{  
         layout: 'default'
       }
     },

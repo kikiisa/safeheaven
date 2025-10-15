@@ -26,10 +26,10 @@ const handleClose = () => {
             <AlertTitle>Tentang Aplikasi</AlertTitle>
             <AlertDescription>
                 SafeHaven v1.0 adalah aplikasi yang dirancang untuk mendukung upaya PPKS (Pencegahan dan Penanganan
-                Kekerasan Seksual), khususnya di lingkungan akademis seperti Universitas Negeri Gorontalo (UNG).
+                Kekerasan Seksual), khususnya di Masyarakat.
             </AlertDescription>
         </Alert>
-        <Button @click="open = true" class="w-full bg-green-400 mt-3 cursor-pointer">Lapor Sekarang <i
+        <Button @click="open = true" class="w-full bg-red-600 mt-3 cursor-pointer">Lapor Sekarang <i
                 class="pi pi-send"></i></Button>
         <BaseModal :open="open" title="Layanan SOS" @close="handleClose"
             description="Untuk mendapatkan bantuan dalam keadaan darurat.">

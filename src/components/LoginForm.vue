@@ -31,7 +31,7 @@ const form = useForm({
       password: values.value.password
     })
     console.log(response);
-    if(response.status == 200) {
+    if (response.status == 200) {
       toast.success(response.data.message);
       form.reset();
       auth.setAuth(response.data.token, response.data.data);
@@ -42,7 +42,7 @@ const form = useForm({
       form.reset();
     }
 
-    if(response.status == 422) {
+    if (response.status == 422) {
       toast.error(response.response.data.message);
     }
   }
@@ -51,13 +51,15 @@ const form = useForm({
 
 <template>
   <div :class="cn('flex flex-col gap-6', props.class)">
-    <Card>
-      <CardHeader class="text-center">
+    <Card class="mt-12">
+      <CardHeader class="flex flex-col items-center justify-center text-center gap-2">
+        <img src="../assets/logo.png" class="object-contain absolute top-[-30px]" alt="logo" width="250">
         <CardTitle class="text-xl"> Selamat Datang </CardTitle>
         <CardDescription>
-          Silahkan masuk dengann account 
+          Silahkan masuk dengan account
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <form @submit.prevent="form.handleSubmit">
           <div class="grid gap-6">
@@ -88,7 +90,7 @@ const form = useForm({
 
                 <form.Field name="password" v-slot="{ field, state }" :validators="{
                   onBlur: ({ value }) => validatePassword({ value }),
-                  
+
                 }">
                   <Input type="password" placeholder="********" :id="field.name" :name="field.name" :value="state.value"
                     @input="field.handleChange($event.target.value)" @blur="field.handleBlur"
@@ -96,11 +98,11 @@ const form = useForm({
                   <small v-if="state.meta.errors.length" class="text-red-500">
                     {{ state.meta.errors[0] }}
                   </small>
-                  
+
                 </form.Field>
               </div>
 
-              <Button type="submit" class="w-full bg-green-400">Login</Button>
+              <Button type="submit" class="w-full bg-red-800">Login</Button>
             </div>
 
             <div class="text-center text-sm">

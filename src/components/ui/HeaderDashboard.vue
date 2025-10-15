@@ -42,15 +42,17 @@ const closeDropdown = () => {
   showDropdown.value = false
 };
 // User data - bisa diganti dengan props atau dari store
+const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
+
 const user = ref({
-  name: auth.user ? auth.user.name : 'Guest',
+  name: auth?.user?.name ?? storedUser?.name ?? 'Guest',
   avatar: 'https://cdn-icons-png.flaticon.com/128/4140/4140037.png',
-  role: 'Mahasiswa',
+  role: storedUser?.role ?? 'Mahasiswa',
 })
 
 </script>
 <template>
-  <header class="relative bg-gradient-to-r from-green-400 to-green-400 p-4 rounded-b-xl shadow-lg lg:w-1/3 mx-auto">
+  <header class="relative bg-gradient-to-r from-red-400 to-red-800 p-4 rounded-b-xl shadow-sm lg:w-1/3 mx-auto">
     <div class="flex items-center justify-between">
       <!-- App Title & Welcome -->
       <div class="flex-1">

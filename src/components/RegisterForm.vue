@@ -128,7 +128,7 @@ const form = useForm({
                                 </div>
                             </form.Field>
                         </div>
-                        <Button type="submit" class="w-full bg-green-400"> Daftar</Button>
+                        <Button type="submit" class="w-full bg-red-800"> Daftar</Button>
                         <div class="text-center text-sm">
                             Sudah punya akun?
                             <RouterLink :to="{ name: 'login' }" class="underline underline-offset-4"> Masuk di sini

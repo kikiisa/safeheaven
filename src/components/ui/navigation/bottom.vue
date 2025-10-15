@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 // Active tab state
-const activeTab = ref('home')
+const activeTab = useRoute()
 
 const setActiveTab = (tab) => {
   activeTab.value = tab
@@ -12,10 +12,10 @@ const setActiveTab = (tab) => {
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 safe-area-pb lg:w-1/3 mx-auto rounded-t-xl">
     <div class="flex justify-around items-center px-2 py-1">
       <button 
-      @click="setActiveTab('profile')"
+      
       :class="[
           'flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1 transition-colors duration-200',
-          activeTab === 'profile' ? 'text-green-400' : 'text-gray-500 hover:text-gray-700'
+          activeTab === 'profile' ? 'text-red-400' : 'text-gray-500 hover:text-gray-700'
         ]"
         class="group"
         >
@@ -31,7 +31,7 @@ const setActiveTab = (tab) => {
         <!-- Active indicator dot -->
         <div 
         v-if="activeTab === 'profile'" 
-        class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full"
+        class="absolute -top-1 -right-1 w-2 h-2 bg-red-400 rounded-full"
         ></div>
       </div>
       <span class="text-xs font-medium truncate">Profile</span>
@@ -39,10 +39,9 @@ const setActiveTab = (tab) => {
     
     <RouterLink 
       :to="{ name: 'beranda' }" 
-      @click="setActiveTab('home')"
       :class="[
         'flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1 transition-colors duration-200',
-        activeTab === 'home' ? 'text-green-400' : 'text-gray-500 hover:text-gray-700'
+        activeTab.name === 'beranda' ? 'text-red-400' : 'text-gray-500 hover:text-gray-700'
       ]"
       class="group"
     >
@@ -58,17 +57,16 @@ const setActiveTab = (tab) => {
         <!-- Active indicator dot -->
         <div 
           v-if="activeTab === 'home'" 
-          class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full"
+          class="absolute -top-1 -right-1 w-2 h-2 bg-red-400 rounded-full"
         ></div>
       </div>
       <span class="text-xs font-medium truncate">Home</span>
     </RouterLink>
       <!-- Logout Tab (dengan style berbeda) -->
       <button 
-        @click="setActiveTab('logout')"
         :class="[
           'flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1 transition-colors duration-200',
-          activeTab === 'logout' ? 'text-red-400' : 'text-gray-500 hover:text-red-500'
+          activeTab.name === 'logout' ? 'text-red-400' : 'text-gray-500 hover:text-red-500'
         ]"
         class="group"
       >
