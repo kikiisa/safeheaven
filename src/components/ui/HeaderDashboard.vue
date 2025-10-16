@@ -122,8 +122,9 @@ const user = ref({
             </div>
             
             <!-- Menu items -->
-            <button 
-              @click="handleProfile"
+            <RouterLink 
+              :to="{ name: 'profile' }" 
+              
               class="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors duration-150"
             >
               <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -135,22 +136,7 @@ const user = ref({
                 <p class="text-sm font-medium">Profile</p>
                 <p class="text-xs text-gray-500">Manage your account</p>
               </div>
-            </button>
-
-            <button 
-              class="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors duration-150"
-            >
-              <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-              </div>
-              <div class="text-left">
-                <p class="text-sm font-medium">Settings</p>
-                <p class="text-xsmax-w-md text-gray-500">Preferences & privacy</p>
-              </div>
-            </button>
-
+            </RouterLink>
             <div class="border-t border-gray-100 mt-2 pt-2">
               <button 
                 @click="handleLogout"

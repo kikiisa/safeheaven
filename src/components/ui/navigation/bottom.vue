@@ -3,19 +3,15 @@ import { ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 // Active tab state
 const activeTab = useRoute()
-
-const setActiveTab = (tab) => {
-  activeTab.value = tab
-}
 </script>
 <template>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 safe-area-pb lg:w-1/3 mx-auto rounded-t-xl">
     <div class="flex justify-around items-center px-2 py-1">
-      <button 
+      <RouterLink :to="{ name: 'profile' }" 
       
       :class="[
           'flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1 transition-colors duration-200',
-          activeTab === 'profile' ? 'text-red-400' : 'text-gray-500 hover:text-gray-700'
+          activeTab.name === 'profile' ? 'text-red-400' : 'text-gray-500 hover:text-gray-700'
         ]"
         class="group"
         >
@@ -35,7 +31,7 @@ const setActiveTab = (tab) => {
         ></div>
       </div>
       <span class="text-xs font-medium truncate">Profile</span>
-    </button>
+      </RouterLink>
     
     <RouterLink 
       :to="{ name: 'beranda' }" 
@@ -90,24 +86,21 @@ const setActiveTab = (tab) => {
     </div>
   </nav>
 
-  <!-- Spacer untuk content agar tidak tertutup bottom nav -->
   <div class="h-16 w-full"></div>
 </template>
 
 <style scoped>
-/* Safe area untuk iPhone dengan notch */
+
 .safe-area-pb {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-/* Hover effect pada desktop */
 @media (hover: hover) {
   button:hover {
     background-color: rgba(0, 0, 0, 0.05);
   }
 }
 
-/* Active state animation */
 button:active {
   background-color: rgba(0, 0, 0, 0.1);
 }

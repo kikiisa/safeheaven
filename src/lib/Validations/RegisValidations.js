@@ -8,9 +8,14 @@ export const validatePassword = ({value}) => {
     if(value.length < 8) return "* Password minimal 8 karakter"
 }
 
+export const validateConfirmPassword = ({value}) => {
+    if(!value) return "* Konfirmasi Password tidak boleh kosong"
+}
+
 export const validateName = ({value}) => {
     if(!value) return "* Nama Lengkap tidak boleh kosong"
 }
+
 
 export const validateUsername = ({value}) => {
     if(!value) return "* Username tidak boleh kosong"

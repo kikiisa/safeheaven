@@ -11,6 +11,7 @@ import Detail from '@/views/reading/Detail.vue'
 import Sos from '@/views/sos/Sos.vue'
 import Report from '@/views/report/Report.vue'
 import Health from '@/views/health/Health.vue'
+import Profile from '@/views/profile/Profile.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -56,14 +57,21 @@ const router = createRouter({
       },
     },
     {
-      'path':'/health',
+      path:'/health',
       name:'health',
       component:Health,
       meta: {
         layout: 'default'
       }
     },
-    
+    {
+      path:"/profile",
+      name:'profile',
+      component:Profile,
+      meta:{
+        layout:"default"
+      }
+    },
     {
       path:"/report",
       name:"report",

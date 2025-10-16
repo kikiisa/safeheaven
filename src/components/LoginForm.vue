@@ -16,33 +16,40 @@ import { useForm } from "@tanstack/vue-form";
 import { validateEmail, validatePassword } from "@/lib/Validations/LoginValidations";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
+import { ref } from "vue";
 const auth = useAuthStore();
+
 const props = defineProps({
   class: { type: null, required: false },
 });
+const isLoading = ref(false)
 const form = useForm({
   defaultValues: {
     email: "",
     password: ""
   },
   onSubmit: async (values) => {
+    isLoading.value = true
     const response = await login({
       email: values.value.email,
       password: values.value.password
     })
-    console.log(response);
+    
     if (response.status == 200) {
       toast.success(response.data.message);
       form.reset();
       auth.setAuth(response.data.token, response.data.data);
+      isLoading.value = false
       return router.push("/beranda")
     }
     if (response.status == 401) {
       toast.error(response.response.data.message);
       form.reset();
+      isLoading.value = false
     }
 
     if (response.status == 422) {
+      isLoading.value = false
       toast.error(response.response.data.message);
     }
   }
@@ -102,7 +109,10 @@ const form = useForm({
                 </form.Field>
               </div>
 
-              <Button type="submit" class="w-full bg-red-800">Login</Button>
+              <Button type="submit" class="w-full bg-red-800" :disabled="isLoading">
+                <span class="ml-2" v-if="isLoading">Tunggu Sebentar<i class="pi pi-spin pi-spinner"></i></span>
+                <span v-else>Masuk</span>
+              </Button>
             </div>
 
             <div class="text-center text-sm">

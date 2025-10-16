@@ -73,7 +73,6 @@ const form = useForm({
                                         @blur="field.handleBlur" @input="field.handleChange($event.target.value)"
                                         :id="field.name" :name="field.name" :value="state.value" type="text"
                                         placeholder="Masukkan nama lengkap Anda" required />
-
                                     <small v-if="state.meta.errors.length" class="text-red-500">
                                         {{ state.meta.errors[0] }}
                                     </small>
