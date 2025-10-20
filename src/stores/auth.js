@@ -1,8 +1,8 @@
 import { defineStore } from "pinia"
-import { Preferences } from "@capacitor/preferences"
+
 import { ref } from "vue"
-import {profile} from "../lib/Api/Auth"
-import api from "@/lib/services"
+import { useQuery } from "@tanstack/vue-query"
+import Profile from "@/views/profile/Profile.vue"
 export const useAuthStore = defineStore("auth", () => {
   const isAuth = ref(false)
   const token = ref(null)
@@ -17,6 +17,19 @@ export const useAuthStore = defineStore("auth", () => {
     window.localStorage.setItem("user", JSON.stringify(newUser))
   }
 
+  async function refreshProfile() {
+     const profileQuery = useQuery({
+      queryKey: ["profile"],
+      queryFn: () => Profile(),
+      onSuccess: (data) => {
+        user.value = data.data // sesuaikan struktur responsenya
+      },
+    })
+  }
+
+  async function setUser(newUser) {
+    user.value = newUser
+  }
   // Logout + hapus dari Preferences
   async function logout() {
     try{
@@ -53,8 +66,9 @@ export const useAuthStore = defineStore("auth", () => {
     token,
     user,
     setAuth,
+    setUser,
     logout,
     loadAuth,
-
+    refreshProfile
   }
 })

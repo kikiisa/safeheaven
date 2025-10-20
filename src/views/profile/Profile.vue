@@ -8,15 +8,15 @@ import { updateProfile } from '@/lib/Api/Profile';
 import { genderValidate, validateEmail, validateName, validatePhone, validateUsername } from '@/lib/Validations/RegisValidations';
 import { useForm} from '@tanstack/vue-form';
 import { useQuery } from '@tanstack/vue-query';
-
 import { ref, watch } from 'vue';
 import Select from '@/components/ui/select/Select.vue';
 import SelectItem from '@/components/ui/select/SelectItem.vue';
 import SelectTrigger from '@/components/ui/select/SelectTrigger.vue';
 import SelectContent from '@/components/ui/select/SelectContent.vue';
-
+const auth = useAuthStore();
 import SelectValue from '@/components/ui/select/SelectValue.vue';
 import { toast } from 'vue-sonner';
+import { useAuthStore } from '@/stores/auth';
 const isLoading = ref(false)
 const form = useForm({
     defaultValues: {
@@ -33,6 +33,7 @@ const form = useForm({
         isLoading.value = true
         try {
             const response = await updateProfile(values.value);
+            auth.setUser(response.data.data);
             toast.success(response.data.message);
             isLoading.value = false
         }catch(e)

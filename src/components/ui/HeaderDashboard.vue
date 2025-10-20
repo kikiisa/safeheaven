@@ -1,15 +1,16 @@
 <script setup>
-import {ref } from 'vue'
+import {computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import {toast} from 'vue-sonner'
 import { logout } from '@/lib/Api/Auth';
 import { useRouter } from 'vue-router';
+import { getInitials } from '@/lib/getInitials';
 
 
 const router = useRouter();
+
+
 const auth = useAuthStore();
-
-
 
 // Dropdown state
 const showDropdown = ref(false)
@@ -37,6 +38,7 @@ const handleProfile = () => {
   showDropdown.value = false
 }
 
+
 // Close dropdown when clicking outside
 const closeDropdown = () => {
   showDropdown.value = false
@@ -44,30 +46,28 @@ const closeDropdown = () => {
 // User data - bisa diganti dengan props atau dari store
 const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
 
-const user = ref({
-  name: auth?.user?.name ?? storedUser?.name ?? 'Guest',
-  avatar: 'https://cdn-icons-png.flaticon.com/128/4140/4140037.png',
-  role: storedUser?.role ?? 'Mahasiswa',
-})
+const user = computed(() => auth.user ?? { name: "Guest", role: "Mahasiswa" })
+
+
 
 </script>
 <template>
   <header class="relative bg-gradient-to-r from-red-400 to-red-800 p-4 rounded-b-xl shadow-sm lg:w-1/3 mx-auto">
     <div class="flex items-center justify-between">
       <!-- App Title & Welcome -->
+       
       <div class="flex-1">
         <div class="flex items-center gap-2 mb-1">
           <h1 class="font-bold text-white text-xl">
-            Safeheaven  
-
+            Safeheaven 
             <span class="text-xs text-green-100 font-normal ml-1">v.1.0</span>
           </h1>
           <!-- App Icon/Logo (optional) -->
           <div class="w-6 h-6 bg-opacity-20 rounded-full flex items-center justify-center">
-           
+            
           </div>
         </div>
-        <p class="text-green-100 text-sm">Hi, Selamat Datang <span class="font-medium">{{ user.name }}"</span></p>
+        <p class="text-green-100 text-sm">Hi, Selamat Datang <span class="font-medium">{{ auth?.user?.full_name }}</span></p>
       </div>
       <!-- User Profile Section -->
       <div class="relative">
@@ -77,15 +77,19 @@ const user = ref({
         >
           <!-- Avatar -->
           <div class="relative">
-            <img 
+            <!-- <img 
               :src="user.avatar" 
               :alt="user.name"
               class="w-10 h-10 rounded-full border-2 border-white border-opacity-30 object-cover"
               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-            >
+            > -->
+             <div class="w-10 h-10 flex items-center justify-center rounded-full bg-red-800 text-white font-bold">
+                    {{ getInitials(auth?.user?.full_name) }}
+                </div>
+                
             <!-- Fallback avatar -->
             <div class="hidden w-10 h-10 rounded-full border-2 border-white border-opacity-30 bg-white bg-opacity-20 items-center justify-center">
-              <span class="text-white font-medium text-sm">{{ user.name.charAt(0) }}</span>
+              <span class="text-white font-medium text-sm">{{ auth?.user?.full_name }}</span>
             </div>
             <!-- Online indicator -->
             <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
@@ -128,9 +132,10 @@ const user = ref({
               class="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors duration-150"
             >
               <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
+                 <div class="w-4 h-8 flex items-center justify-center rounded-full text-dark font-bold">
+                    {{ getInitials(user.name) }}
+                </div>
+
               </div>
               <div class="text-left">
                 <p class="text-sm font-medium">Profile</p>
@@ -146,6 +151,7 @@ const user = ref({
                   <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
                   </svg>
+                  
                 </div>
                 <div class="text-left">
                   <p class="text-sm font-medium">Logout</p>

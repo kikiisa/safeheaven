@@ -13,12 +13,17 @@ import { Label } from '@/components/ui/label';
 const props = defineProps({
     class: { type: null, required: false },
 });
+
+
 import { useRouter } from "vue-router";
 const router = useRouter();
 import { useForm } from "@tanstack/vue-form";
 import { validateEmail, validateName, validatePassword, validatePhone } from "@/lib/Validations/RegisValidations";
 import { register } from "@/lib/Api/Register";
 import { toast } from "vue-sonner";
+import { ref } from "vue";
+const isLoading = ref(false)
+
 const form = useForm({
     defaultValues: {
         name: "",
@@ -29,6 +34,7 @@ const form = useForm({
         confirm_password: "",
     },
     onSubmit: async (values) => {
+        isLoading.value = true
         try {
             const response = await register({
                 full_name: values.value.full_name,
@@ -39,12 +45,14 @@ const form = useForm({
             })
             toast.success(response.data.message);
             form.reset();
+            isLoading.value = false
             
         } catch (e) {
             if (e.response.data.errors) {
                 const firstError = Object.values(e.response.data.errors)[0][0];
                 toast.error(firstError);
             }
+            isLoading.value = false
         }
     }
 });
@@ -127,7 +135,10 @@ const form = useForm({
                                 </div>
                             </form.Field>
                         </div>
-                        <Button type="submit" class="w-full bg-red-800"> Daftar</Button>
+                        <Button class="bg-red-500 hover:bg-red-600" :disabled="isLoading">
+                            <span class="ml-2" v-if="isLoading">Tunggu Sebentar<i class="pi pi-spin pi-spinner"></i></span>
+                            <span v-else>Daftar</span>
+                        </Button>
                         <div class="text-center text-sm">
                             Sudah punya akun?
                             <RouterLink :to="{ name: 'login' }" class="underline underline-offset-4"> Masuk di sini
