@@ -34,6 +34,7 @@ const form = useForm({
         try {
             const response = await updateProfile(values.value);
             auth.setUser(response.data.data);
+            auth.setAuth(localStorage.getItem("token"), response.data.data);
             toast.success(response.data.message);
             isLoading.value = false
         }catch(e)
@@ -47,7 +48,6 @@ const form = useForm({
         }
     }
 });
-
 const { data: users, isLoading: usersLoading } = useQuery({
     queryKey: ['profile'],
     queryFn: profile

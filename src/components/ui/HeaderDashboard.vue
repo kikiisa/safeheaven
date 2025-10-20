@@ -112,11 +112,7 @@ const user = computed(() => auth.user ?? { name: "Guest", role: "Mahasiswa" })
             class="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50"
           >
             <!-- User info in dropdown (mobile) -->
-            <div class="px-4 py-3 border-b border-gray-100 sm:hidden">
-              <p class="text-gray-900 text-sm font-medium">{{ user.name }}</p>
-              <p class="text-gray-500 text-xs">{{ user.role }}</p>
-            </div>
-            
+           
             <!-- Menu items -->
             <RouterLink 
               :to="{ name: 'profile' }" 

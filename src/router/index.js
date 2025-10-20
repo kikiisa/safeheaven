@@ -127,8 +127,18 @@ router.beforeEach(async (to, from) => {
     return { name: "beranda" };
   }
 
+  // const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  // const user = storedUser;
+  // const isProfileIncomplete = !user.desa_id || !user.jk;
+  // if (auth.isAuth && isProfileIncomplete) {
+  //   if (to.name !== "guide-profile" && to.name !== "profile") {
+  //     // arahkan dulu ke halaman guide
+  //     return { name: "guide-profile" };
+  //   }
+  // }
+
   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-  const user = auth.user ?? storedUser;
+  const user = storedUser;
   const isProfileIncomplete = !user.desa_id || !user.jk;
   if (auth.isAuth && isProfileIncomplete) {
     if (to.name !== "guide-profile" && to.name !== "profile") {
@@ -136,7 +146,6 @@ router.beforeEach(async (to, from) => {
       return { name: "guide-profile" };
     }
   }
-
   return true;
 });
 

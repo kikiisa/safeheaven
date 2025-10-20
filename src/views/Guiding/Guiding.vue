@@ -1,8 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
-
 const router = useRouter();
-
 const handleContinue = () => {
   router.push({ name: "profile" });
 };
@@ -15,7 +13,6 @@ const handleContinue = () => {
     <h1 class="text-2xl font-bold mb-4 animate-slideUp">
       Selamat Datang Di
     </h1>
-
     <img
       src="../../assets/logo.png"
       alt="logo"

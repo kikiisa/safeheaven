@@ -15,10 +15,18 @@ import {
 import Badge from '@/components/ui/badge/Badge.vue';
 import BaseModal from '@/components/ui/modal/baseModal.vue';
 import SosForm from '@/components/SosForm.vue';
+import { useQuery } from '@tanstack/vue-query';
+import { DetailDesa } from '@/lib/Api/Desa';
+import { formatPhoneNumber } from '@/lib/formatPhone';
 const open = defineModel('open', { type: Boolean, default: false })
 const handleClose = () => {
     open.value = false
 }
+
+const { data,isLoading,isError } = useQuery({
+    queryKey: ['DetailDesa'],
+    queryFn: DetailDesa,
+})
 </script>
 <template>
     <div class="main-menu-wraper">
@@ -43,34 +51,33 @@ const handleClose = () => {
                 Hubungi nomor-nomor darurat berikut jika dibutuhkan.
             </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent v-if="data">
             <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Instansi</TableHead>
-                        <TableHead>Nomor Telepon</TableHead>
+                        <TableHead>Telepon dan Whatsapps</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     <TableRow>
-                        <TableCell>Polisi</TableCell>
+                        <TableCell>Operator Desa {{ data.nama_desa }}</TableCell>
                         <TableCell>
-                            <Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i>
-                                08123456789</Badge>
+                            <a :href="`https://wa.me/${formatPhoneNumber(data.no_operator_desa)}`" target="_blank">
+                                <Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i>
+                                    {{ data.no_operator_desa }}</Badge>
+                            </a>
                         </TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>PPA</TableCell>
+                        <TableCell>Polsek Kecamatan Setempat</TableCell>
                         <TableCell>
-                            <Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i>
-                                08123456789</Badge>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Admin Desa</TableCell>
-                        <TableCell>
-                            <Badge class=" cursor-pointer hover:bg-slate-800"><i class="pi pi-whatsapp"></i>
-                                08123456789</Badge>
+                            <a :href="`https://wa.me/${formatPhoneNumber(data.no_polsek_kecamatan)}`" target="_blank">
+                                <Badge class="cursor-pointer hover:bg-slate-800">
+                                    <i class="pi pi-whatsapp"></i> {{ data.no_polsek_kecamatan }}
+                                </Badge>
+                            </a>
+                            
                         </TableCell>
                     </TableRow>
                 </TableBody>
