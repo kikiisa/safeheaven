@@ -32,20 +32,12 @@ const handleLogout = async () => {
   showDropdown.value = false
 }
 
-const handleProfile = () => {
-  // Handle profile navigation
-  console.log('Profile clicked')
-  showDropdown.value = false
-}
 
 
 // Close dropdown when clicking outside
 const closeDropdown = () => {
   showDropdown.value = false
 };
-// User data - bisa diganti dengan props atau dari store
-const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
-
 const user = computed(() => auth.user ?? { name: "Guest", role: "Mahasiswa" })
 
 

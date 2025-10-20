@@ -31,10 +31,9 @@ const form = useForm({
   onSubmit: async (values) => {
     isLoading.value = true
     const response = await login({
-      email: values.value.email,
+      login: values.value.email,
       password: values.value.password
     })
-    
     if (response.status == 200) {
       toast.success(response.data.message);
       form.reset();
@@ -47,7 +46,6 @@ const form = useForm({
       form.reset();
       isLoading.value = false
     }
-
     if (response.status == 422) {
       isLoading.value = false
       toast.error(response.response.data.message);
@@ -77,9 +75,9 @@ const form = useForm({
                 <form.Field name="email" v-slot="{ field, state }" :validators="{
                   onBlur: ({ value }) => validateEmail({ value }),
                 }">
-                  <Label for="email">Email</Label>
-                  <Input type="email" :class="state.meta.errors[0] ? 'border-red-500 border-2' : ''"
-                    placeholder="m@example.com" :id="field.name" :name="field.name" :value="state.value"
+                  <Label :for="field.name">Email / Username</Label>
+                  <Input type="text" :class="state.meta.errors[0] ? 'border-red-500 border-2' : ''"
+                    placeholder="Email atau Nama Pengguna" :id="field.name" :name="field.name" :value="state.value"
                     @input="field.handleChange($event.target.value)" @blur="field.handleBlur" />
                   <small v-if="state.meta.errors.length" class="text-red-500">
                     {{ state.meta.errors[0] }}
@@ -106,11 +104,10 @@ const form = useForm({
                   <small v-if="state.meta.errors.length" class="text-red-500">
                     {{ state.meta.errors[0] }}
                   </small>
-
                 </form.Field>
               </div>
 
-              <Button type="submit" class="w-full bg-red-800" :disabled="isLoading">
+              <Button type="submit" class="w-full bg-red-600" :disabled="isLoading">
                 <span class="ml-2" v-if="isLoading">Tunggu Sebentar<i class="pi pi-spin pi-spinner"></i></span>
                 <span v-else>Masuk</span>
 

@@ -150,6 +150,9 @@ watch(users, (val) => {
                     <label :for="`${field.name}-P`" class="text-sm font-medium">Perempuan</label>
                 </div>
                 <p class="text-xs text-gray-500">Value sekarang: {{ state.value }}</p>
+                  <small v-if="state.meta.errors.length" class="text-red-500">
+                    {{ state.meta.errors[0] }}
+                </small>
             </form.Field>
             <form.Field v-slot="{ state, field }" name="desa_id" :validators="{
                 onChange: ({ value }) => {

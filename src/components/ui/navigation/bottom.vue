@@ -1,8 +1,24 @@
 <script setup>
+import { logout } from '@/lib/Api/Auth';
+import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { toast } from 'vue-sonner';
 // Active tab state
 const activeTab = useRoute()
+const router = useRouter();
+const auth = useAuthStore();
+const handleLogout = async () => {
+  // Handle logout logic here
+  const token = auth.token;
+  const res = await logout();
+  if(res.status == 200) {
+    auth.logout(token);
+    toast.success(res.data.message);
+    return router.push({name:"login"})
+  }
+}
+
 </script>
 <template>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 safe-area-pb lg:w-1/3 mx-auto rounded-t-xl">
@@ -59,7 +75,8 @@ const activeTab = useRoute()
       <span class="text-xs font-medium truncate">Home</span>
     </RouterLink>
       <!-- Logout Tab (dengan style berbeda) -->
-      <button 
+      <button
+      @click="handleLogout" 
         :class="[
           'flex flex-col items-center justify-center py-2 px-3 min-w-0 flex-1 transition-colors duration-200',
           activeTab.name === 'logout' ? 'text-red-400' : 'text-gray-500 hover:text-red-500'

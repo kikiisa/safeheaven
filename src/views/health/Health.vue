@@ -8,9 +8,7 @@ import Button from '@/components/ui/button/Button.vue' // Assuming this is your 
 const API_URL = import.meta.env.VITE_IMAGE_URL
 
 const page = ref(1)
-
 const searchQuery = ref('') 
-
 watch(searchQuery, () => {
   page.value = 1
 })
@@ -59,12 +57,12 @@ const prevPage = () => {
       </div>
     </div>
 
-    <div class="text-center py-8 text-red-500" v-if="isLoading">
-        <p>Memuat data... ⏳</p>
+    <div class="text-center py-8" v-if="isLoading">
+        <p> <span class="pi pi-spinner"></span> Memuat data...</p>
     </div>
 
-    <div class="text-center py-8 text-red-500" v-else-if="isError">
-        <p>Gagal memuat data. Silakan coba lagi. ❌</p>
+    <div v-else-if="isError" class="text-center py-10 text-gray-500 border border-gray-200 bg-white rounded-lg p-4">
+            <p>Tidak ada Agent Health yang tersedia saat ini Hubungi Admin.</p>
     </div>
 
     <div 

@@ -26,6 +26,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.544.0",
+    "motion-v": "^1.7.3",
     "nprogress": "^0.2.0",
     "pinia": "^3.0.3",
     "primeicons": "^7.0.0",

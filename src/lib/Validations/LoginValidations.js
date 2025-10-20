@@ -1,6 +1,5 @@
 export const validateEmail = ({value}) => {
    if(!value) return "Email tidak boleh kosong ya"
-   if(!value.includes("@")) return "Email tidak valid"
 };
 
 export const validatePassword = ({value}) => {

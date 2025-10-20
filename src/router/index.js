@@ -12,6 +12,7 @@ import Sos from '@/views/sos/Sos.vue'
 import Report from '@/views/report/Report.vue'
 import Health from '@/views/health/Health.vue'
 import Profile from '@/views/profile/Profile.vue'
+import Guiding from '@/views/Guiding/Guiding.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -53,7 +54,8 @@ const router = createRouter({
       name:"detailartikel",
       component:Detail,
       meta: {
-        layout: 'default'
+        layout: 'default',
+        requiresAuth: true
       },
     },
     {
@@ -61,7 +63,8 @@ const router = createRouter({
       name:'health',
       component:Health,
       meta: {
-        layout: 'default'
+        layout: 'default',
+        requiresAuth: true
       }
     },
     {
@@ -69,7 +72,8 @@ const router = createRouter({
       name:'profile',
       component:Profile,
       meta:{
-        layout:"default"
+        layout:"default",
+        requiresAuth: true
       }
     },
     {
@@ -77,7 +81,8 @@ const router = createRouter({
       name:"report",
       component:Report,
       meta: {
-        layout: 'default'
+        layout: 'default',
+        requiresAuth: true
       }
     },
     {
@@ -85,7 +90,8 @@ const router = createRouter({
       name:"sos",
       component:Sos,
       meta:{  
-        layout: 'default'
+        layout: 'default',
+        requiresAuth: true
       }
     },
     {
@@ -95,6 +101,12 @@ const router = createRouter({
       meta: {
         layout: 'default'
       }
+    },
+    {
+      path: "/guide-profile",
+      name: "guide-profile",
+      component: Guiding,
+      meta: { requiresAuth: true,layout: 'auth' }
     }
   ],
 })
@@ -102,23 +114,29 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
   nProgress.start();
   const auth = useAuthStore();
-
-  // coba load auth dari storage kalau belum ada
+  
   if (!auth.isAuth || !auth.token) {
     await auth.loadAuth();
   }
 
-  // cek route yang butuh login
   if (to.meta.requiresAuth && !auth.isAuth) {
     return { name: "login" };
   }
 
-  // kalau user sudah login & coba ke login lagi, redirect ke home/dashboard
   if (to.name === "login" && auth.isAuth) {
     return { name: "beranda" };
   }
 
-  // default -> lanjut
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const user = auth.user ?? storedUser;
+  const isProfileIncomplete = !user.desa_id || !user.jk;
+  if (auth.isAuth && isProfileIncomplete) {
+    if (to.name !== "guide-profile" && to.name !== "profile") {
+      // arahkan dulu ke halaman guide
+      return { name: "guide-profile" };
+    }
+  }
+
   return true;
 });
 
