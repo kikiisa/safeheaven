@@ -51,6 +51,7 @@ const form = useForm({
     if (response.status == 422) {
       isLoading.value = false
       toast.error(response.response.data.message);
+    
     }
   }
 })
@@ -112,6 +113,7 @@ const form = useForm({
               <Button type="submit" class="w-full bg-red-800" :disabled="isLoading">
                 <span class="ml-2" v-if="isLoading">Tunggu Sebentar<i class="pi pi-spin pi-spinner"></i></span>
                 <span v-else>Masuk</span>
+
               </Button>
             </div>
 

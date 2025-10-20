@@ -30,3 +30,7 @@ export const Password = ({value}) => {
     if(!value) return "* Password tidak boleh kosong"
     if(value.length < 8) return "* Password minimal 8 karakter"
 }
+
+export const genderValidate = ({value}) => {
+    if(!value) return "* Gender tidak boleh kosong , Harus di centang"
+}
