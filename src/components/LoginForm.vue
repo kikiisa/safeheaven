@@ -65,12 +65,10 @@ const form = useForm({
           Silahkan masuk dengan account
         </CardDescription>
       </CardHeader>
-
       <CardContent>
         <form @submit.prevent="form.handleSubmit">
           <div class="grid gap-6">
             <div class="grid gap-6">
-              <!-- Email -->
               <div class="grid gap-3">
                 <form.Field name="email" v-slot="{ field, state }" :validators="{
                   onBlur: ({ value }) => validateEmail({ value }),
@@ -84,8 +82,6 @@ const form = useForm({
                   </small>
                 </form.Field>
               </div>
-
-              <!-- Password -->
               <div class="grid gap-3">
                 <div class="flex items-center">
                   <Label for="password">Password</Label>
@@ -93,10 +89,8 @@ const form = useForm({
                     Lupa password?
                   </a>
                 </div>
-
                 <form.Field name="password" v-slot="{ field, state }" :validators="{
                   onBlur: ({ value }) => validatePassword({ value }),
-
                 }">
                   <Input type="password" placeholder="********" :id="field.name" :name="field.name" :value="state.value"
                     @input="field.handleChange($event.target.value)" @blur="field.handleBlur"
@@ -110,7 +104,6 @@ const form = useForm({
               <Button type="submit" class="w-full bg-red-600" :disabled="isLoading">
                 <span class="ml-2" v-if="isLoading">Tunggu Sebentar<i class="pi pi-spin pi-spinner"></i></span>
                 <span v-else>Masuk</span>
-
               </Button>
             </div>
 

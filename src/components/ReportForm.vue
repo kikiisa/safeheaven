@@ -3,41 +3,42 @@ import Label from '@/components/ui/label/Label.vue';
 import Textarea from './ui/textarea/Textarea.vue';
 import Button from './ui/button/Button.vue';
 import Input from './ui/input/Input.vue';
-import { reactive, ref, watch, computed } from 'vue'; // Import 'watch' and 'computed'
+import {  ref, watch, computed } from 'vue'; // Import 'watch' and 'computed'
 import { toast } from 'vue-sonner'
 import { useQuery } from '@tanstack/vue-query';
 import { createReportQuestion, Question } from '@/lib/Api/Question';
 import { useForm } from '@tanstack/vue-form';
 import { validateNamaPelaku, ValidateTempat, Validatewaktu } from '@/lib/Validations/ReportValidations';
-
-// --- Data Fetching ---
+import { generateText } from '@/lib/GeminiAi';
+import { ResultReport } from '@/lib/Api/ResultReport';
+import baseModal from './ui/modal/baseModal.vue';
 const { isLoading, data } = useQuery({
     queryKey: ['Question'],
     queryFn: Question
 });
 
-// --- Pagination State ---
 const currentPage = ref(1);
-const questionsPerPage = 5; // Set how many questions per page
-
-// --- State ---
+const questionsPerPage = 5; 
 const loading = ref(false)
+const resultScreening = ref(null)
+const openModal = defineModel('open', { type: Boolean, default: false })
+const handleCLose = () => {
+    openModal.value = false
+}
 
-// --- Form Setup ---
+
 const form = useForm({
     defaultValues: {
         nama_pelaku: "",
         waktu_kejadian: "",
         tanggal_kejadian: "",
         tempat_kejadian: "",
-        answers: [], // Initial empty array, will be populated on data load
+        answers: [],
     },
     onSubmit: async (values) => {
+   
         loading.value = true;
-        
         try {
-            // Ensure you are using the correct structure for your API call.
-            // Assuming your API expects a flat object payload:
             const formData = new FormData();
             formData.append('nama_pelaku', values.value.nama_pelaku);
             formData.append('waktu_kejadian', values.value.waktu_kejadian);
@@ -48,12 +49,15 @@ const form = useForm({
                 formData.append(`answers[${index}][answer]`, ans.answer);
             });
             const response = await createReportQuestion(formData);
-            
+            const Report = await ResultReport(formData);
+            const generateReport = await generateText(`berikan hasil level screening (yang meliputi 1. Level Screening dan 2. Penjelasan ) dari pertanyaan berikut '${Report.data.data}'buat dalam output murni (html) tanpa tag pembuka (<html>)`)
+            openModal.value = true
+            resultScreening.value = generateReport
             toast.success(response.data.message);
+
             form.reset();
-            
             initializeDefaultAnswers(data.value?.data?.data);
-            currentPage.value = 1; // Reset to first page after successful submission
+            currentPage.value = 1;
             loading.value = false;
         } catch (e) {
             
@@ -61,11 +65,10 @@ const form = useForm({
             toast.error(errorMessage);
             loading.value = false;
         }
-        console.log(values)
+        
     }
 });
 
-// --- Pagination Logic ---
 const allQuestions = computed(() => data.value?.data?.data || []);
 
 const paginatedQuestions = computed(() => {
@@ -92,7 +95,7 @@ const prevPage = () => {
         currentPage.value--;
     }
 };
-// -------------------------
+
 
 
 const initializeDefaultAnswers = (questions) => {
@@ -135,8 +138,13 @@ watch(data, (newData) => {
 
 <template>
     <section class="flex justify-center">
-        <form class="w-full flex flex-col gap-3" @submit.prevent="form.handleSubmit">
-            
+        <baseModal :open="openModal" title="Hasil Screening" @close="handleCLose">
+            <div class="content text-sm overflow-y-auto max-h-[calc(100vh-14rem)]" v-if="resultScreening" v-html="resultScreening">
+    
+            </div>
+
+        </baseModal>
+        <form class="w-full flex flex-col gap-3" @submit.prevent="form.handleSubmit">  
             <div class="form-group grid grid-cols-1 gap-2">
                 <form.Field name="nama_pelaku" v-slot="{ field, state }"
                     :validators="{ onBlur: ({ value }) => validateNamaPelaku({ value }) }">
