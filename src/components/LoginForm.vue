@@ -16,43 +16,53 @@ import { useForm } from "@tanstack/vue-form";
 import { validateEmail, validatePassword } from "@/lib/Validations/LoginValidations";
 import router from "@/router";
 import { useAuthStore } from "@/stores/auth";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 const auth = useAuthStore();
 
 const props = defineProps({
   class: { type: null, required: false },
 });
+
 const isLoading = ref(false)
-const form = useForm({
-  defaultValues: {
-    email: "",
-    password: ""
-  },
-  onSubmit: async (values) => {
-    isLoading.value = true
+const Form = reactive({
+  email: "",
+  password: "",  
+});
+
+const onSubmit = async () => {
+  isLoading.value = true;
+  try {
     const response = await login({
-      login: values.value.email,
-      password: values.value.password
-    })
-    if (response.status == 200) {
+      login: Form.email,
+      password: Form.password,
+    });
+
+    if (response.status === 200) {
       toast.success(response.data.message);
-      form.reset();
       auth.setAuth(response.data.token, response.data.data);
-      isLoading.value = false
-      return router.push("/beranda")
+    
+      return router.push("/beranda");
     }
-    if (response.status == 401) {
-      toast.error(response.response.data.message);
-      form.reset();
-      isLoading.value = false
-    }
-    if (response.status == 422) {
-      isLoading.value = false
+
+    if (response.status === 401) {
       toast.error(response.response.data.message);
     
     }
+
+    if (response.status === 422) {
+      toast.error(response.response.data.message);
+     
+    }
+  } catch (err) {
+     if (e.response?.data?.errors) {
+      toast.error(e.response.data.errors);
+    }
+    console.error(err);
+    toast.error("Terjadi kesalahan saat login");
+  } finally {
+    isLoading.value = false;
   }
-})
+};
 </script>
 
 <template>
@@ -66,39 +76,25 @@ const form = useForm({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form @submit.prevent="form.handleSubmit">
+        <form @submit.prevent="onSubmit">
           <div class="grid gap-6">
             <div class="grid gap-6">
               <div class="grid gap-3">
-                <form.Field name="email" v-slot="{ field, state }" :validators="{
-                  onBlur: ({ value }) => validateEmail({ value }),
-                }">
-                  <Label :for="field.name">Email / Username</Label>
-                  <Input type="text" :class="state.meta.errors[0] ? 'border-red-500 border-2' : ''"
-                    placeholder="Email atau Nama Pengguna" :id="field.name" :name="field.name" :value="state.value"
-                    @input="field.handleChange($event.target.value)" @blur="field.handleBlur" />
-                  <small v-if="state.meta.errors.length" class="text-red-500">
-                    {{ state.meta.errors[0] }}
-                  </small>
-                </form.Field>
+                  <Label>Email / Username</Label>
+                  <Input required v-model="Form.email" type="text" placeholder="Email atau Nama Pengguna" />
               </div>
               <div class="grid gap-3">
                 <div class="flex items-center">
                   <Label for="password">Password</Label>
-                  <a href="#" class="ml-auto text-sm underline-offset-4 hover:underline">
+                  <RouterLink :to="{ name: 'reset-password' }"
+                    class="ml-auto text-sm underline-offset-4 hover:underline">
                     Lupa password?
-                  </a>
+                  </RouterLink>
                 </div>
-                <form.Field name="password" v-slot="{ field, state }" :validators="{
-                  onBlur: ({ value }) => validatePassword({ value }),
-                }">
-                  <Input type="password" placeholder="********" :id="field.name" :name="field.name" :value="state.value"
-                    @input="field.handleChange($event.target.value)" @blur="field.handleBlur"
-                    :class="state.meta.errors[0] ? 'border-red-500 border-2' : ''" />
-                  <small v-if="state.meta.errors.length" class="text-red-500">
-                    {{ state.meta.errors[0] }}
-                  </small>
-                </form.Field>
+                 <div class="grid gap-3">
+                 
+                  <Input v-model="Form.password" required type="password" placeholder="Input Password" />
+                </div>
               </div>
 
               <Button type="submit" class="w-full bg-red-600" :disabled="isLoading">

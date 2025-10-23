@@ -13,6 +13,7 @@ import Report from '@/views/report/Report.vue'
 import Health from '@/views/health/Health.vue'
 import Profile from '@/views/profile/Profile.vue'
 import Guiding from '@/views/Guiding/Guiding.vue'
+import ResetPassword from '@/views/Auth/ResetPassword.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -20,6 +21,14 @@ const router = createRouter({
       path: '/',
       name: 'login',
       component: Login,
+      meta: {
+        layout: 'auth'
+      }
+    },
+    {
+      path:'/reset-password',
+      name:'reset-password',
+      component:ResetPassword,
       meta: {
         layout: 'auth'
       }
@@ -127,29 +136,18 @@ router.beforeEach(async (to, from) => {
     return { name: "beranda" };
   }
 
-  // const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-  // const user = storedUser;
-  // const isProfileIncomplete = !user.desa_id || !user.jk;
-  // if (auth.isAuth && isProfileIncomplete) {
-  //   if (to.name !== "guide-profile" && to.name !== "profile") {
-  //     // arahkan dulu ke halaman guide
-  //     return { name: "guide-profile" };
-  //   }
-  // }
+ 
 
   const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
   const user = storedUser;
   const isProfileIncomplete = !user.desa_id || !user.jk;
   if (auth.isAuth && isProfileIncomplete) {
     if (to.name !== "guide-profile" && to.name !== "profile") {
-      // arahkan dulu ke halaman guide
       return { name: "guide-profile" };
     }
   }
   return true;
 });
-
-// Hentikan progress bar setelah selesai
 router.afterEach(() => {
   nProgress.done()
 })

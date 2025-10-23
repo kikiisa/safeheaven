@@ -13,49 +13,43 @@ import { Label } from '@/components/ui/label';
 const props = defineProps({
     class: { type: null, required: false },
 });
-
-
-import { useRouter } from "vue-router";
-const router = useRouter();
-import { useForm } from "@tanstack/vue-form";
-import { validateEmail, validateName, validatePassword, validatePhone } from "@/lib/Validations/RegisValidations";
 import { register } from "@/lib/Api/Register";
 import { toast } from "vue-sonner";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 const isLoading = ref(false)
 
-const form = useForm({
-    defaultValues: {
-        name: "",
-        full_name: "",
-        email: "",
-        phone: "",
-        password: "",
-        confirm_password: "",
-    },
-    onSubmit: async (values) => {
-        isLoading.value = true
-        try {
-            const response = await register({
-                full_name: values.value.full_name,
-                email: values.value.email,
-                phone: values.value.phone,
-                password: values.value.password,
-                confirm_password: values.value.confirm_password
-            })
-            toast.success(response.data.message);
-            form.reset();
-            isLoading.value = false
-            
-        } catch (e) {
-            if (e.response.data.errors) {
-                const firstError = Object.values(e.response.data.errors)[0][0];
-                toast.error(firstError);
-            }
-            isLoading.value = false
-        }
-    }
+const form = reactive({
+
+    name: "",
+    full_name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirm_password: "",
 });
+
+const handleForm = async () => {
+    isLoading.value = true
+    try {
+        const response = await register({
+            full_name: form.full_name,
+            email: form.email,
+            phone: form.phone,
+            password: form.password,
+            
+        })
+        toast.success(response.data.message);
+        form.reset();
+        isLoading.value = false
+
+    } catch (e) {
+        if (e.response?.data?.errors) {
+
+            toast.error(e.response.data.errors);
+        }
+        isLoading.value = false
+    }
+}
 
 </script>
 <template>
@@ -68,75 +62,35 @@ const form = useForm({
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <form @submit.prevent="form.handleSubmit">
+                <form @submit.prevent="handleForm">
 
                     <div class="grid gap-3">
                         <div class="grid grid-cols-1 gap-6">
-                            <form.Field v-slot="{ field, state }" name="full_name" :validators="{
-                                onBlur: ({ value }) => validateName({ value }),
-                            }">
-                                <div class="flex flex-col gap-3">
-                                    <Label for="nama_lengkap">Nama Lengkap</Label>
-                                    <Input :class="state.meta.errors[0] ? 'border-red-500 border-2' : ''"
-                                        @blur="field.handleBlur" @input="field.handleChange($event.target.value)"
-                                        :id="field.name" :name="field.name" :value="state.value" type="text"
-                                        placeholder="Masukkan nama lengkap Anda" required />
-                                    <small v-if="state.meta.errors.length" class="text-red-500">
-                                        {{ state.meta.errors[0] }}
-                                    </small>
-                                </div>
-                            </form.Field>
-                            <form.Field v-slot="{ field, state }" name="email" :validators="{
-                                onBlur: ({ value }) => validateEmail({ value }),
-                            }">
-                                <div class="flex flex-col gap-3">
-                                    <Label for="nama_lengkap">Email</Label>
-                                    <Input :class="state.meta.errors[0] ? 'border-red-500 border-2' : ''"
-                                        @blur="field.handleBlur" @input="field.handleChange($event.target.value)"
-                                        :id="field.name" :name="field.name" :value="state.value" type="email"
-                                        placeholder="Masukkan Email" required />
 
-                                    <small v-if="state.meta.errors.length" class="text-red-500">
-                                        {{ state.meta.errors[0] }}
-                                    </small>
-                                </div>
-                            </form.Field>
-                            <form.Field v-slot="{ field, state }" name="phone" :validators="{
-                                onBlur: ({ value }) => validatePhone({ value }),
-                            }">
-                                <div class="flex flex-col gap-3">
-                                    <Label :for="field.name">Nomor Telepon</Label>
-                                    <Input :class="state.meta.errors[0] ? 'border-red-500 border-2' : ''"
-                                        @blur="field.handleBlur" @input="field.handleChange($event.target.value)"
-                                        :id="field.name" :name="field.name" :value="state.value" type="text"
-                                        placeholder="Masukkan Nomor Telepon Aktif" required />
+                            <div class="flex flex-col gap-3">
+                                <Label for="nama_lengkap">Nama Lengkap</Label>
+                                <Input v-model="form.full_name" type="text" placeholder="Masukkan nama lengkap Anda" />
+                            </div>
+                            <div class="flex flex-col gap-3">
+                                <Label for="email">Email</Label>
+                                <Input placeholder="Masukkan Email" v-model="form.email" />
+                            </div>
+                            <div class="flex flex-col gap-3">
+                                <Label for="phone">Nomor Telepon</Label>
+                                <Input v-model="form.phone" placeholder="Masukkan Nomor Telepon Aktif" />
 
-                                    <small v-if="state.meta.errors.length" class="text-red-500">
-                                        {{ state.meta.errors[0] }}
-                                    </small>
-                                    <small class="text-sm text-slate-500"><span class="pi pi-info-circle"></span>
-                                        Dimulai dari 08*****</small>
-                                </div>
-                            </form.Field>
-                            <form.Field v-slot="{ field, state }" name="password" :validators="{
-                                onBlur: ({ value }) => validatePassword({ value }),
-                            }">
-                                <div class="flex flex-col gap-3">
-                                    <Label :for="field.name">Password</Label>
-                                    <Input :class="state.meta.errors[0] ? 'border-red-500 border-2' : ''"
-                                        @blur="field.handleBlur" @input="field.handleChange($event.target.value)"
-                                        :id="field.name" :name="field.name" :value="state.value" type="password"
-                                        placeholder="*************" required />
 
-                                    <small v-if="state.meta.errors.length" class="text-red-500">
-                                        {{ state.meta.errors[0] }}
-                                    </small>
-
-                                </div>
-                            </form.Field>
+                                <small class="text-sm text-slate-500"><span class="pi pi-info-circle"></span>
+                                    Dimulai dari 08*****</small>
+                            </div>
+                            <div class="flex flex-col gap-3">
+                                <Label>Password</Label>
+                                <Input v-model="form.password" type="password" placeholder="*************" />
+                            </div>
                         </div>
                         <Button class="bg-red-500 hover:bg-red-600" :disabled="isLoading">
-                            <span class="ml-2" v-if="isLoading">Tunggu Sebentar<i class="pi pi-spin pi-spinner"></i></span>
+                            <span class="ml-2" v-if="isLoading">Tunggu Sebentar<i
+                                    class="pi pi-spin pi-spinner"></i></span>
                             <span v-else>Daftar</span>
                         </Button>
                         <div class="text-center text-sm">
