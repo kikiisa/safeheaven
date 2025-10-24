@@ -18,7 +18,6 @@ const handleLogout = async () => {
     return router.push({name:"login"})
   }
 }
-
 </script>
 <template>
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 safe-area-pb lg:w-1/3 mx-auto rounded-t-xl">
@@ -32,7 +31,6 @@ const handleLogout = async () => {
         class="group"
         >
         <div class="relative">
-          <!-- Profile Icon -->
           <svg 
           class="w-6 h-6 mb-1 transition-transform duration-200 group-active:scale-95" 
           fill="currentColor" 

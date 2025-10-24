@@ -54,7 +54,7 @@ const onSubmit = async () => {
      
     }
   } catch (err) {
-     if (e.response?.data?.errors) {
+    if (e.response?.data?.errors) {
       toast.error(e.response.data.errors);
     }
     console.error(err);
