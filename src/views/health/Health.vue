@@ -50,7 +50,7 @@ const prevPage = () => {
         
         <input
           type="text"
-          @keypress=""
+          
           v-model="searchQuery" placeholder="Cari nama, spesialisasi, atau lokasi..."
           class="w-full py-3 pl-10 pr-4 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
         />

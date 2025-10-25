@@ -60,7 +60,7 @@ const handleResetPassword = async () => {
                         <div class="grid grid-cols-1 gap-6">
                             <div class="flex flex-col gap-3">
                                 <Label for="nama_lengkap">Email</Label>
-                                <Input v-model="Form.email" placeholder="Masukkan Email" required />
+                                <Input v-model="Form.email" type="email" placeholder="Masukkan Email" required />
                             </div>
                         </div>
                         <Button class="bg-red-500 hover:bg-red-600" :disabled="isLoading">

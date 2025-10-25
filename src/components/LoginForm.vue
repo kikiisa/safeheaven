@@ -86,10 +86,10 @@ const onSubmit = async () => {
               <div class="grid gap-3">
                 <div class="flex items-center">
                   <Label for="password">Password</Label>
-                  <RouterLink :to="{ name: 'reset-password' }"
+                  <a href="http://localhost:8000/reset-password"
                     class="ml-auto text-sm underline-offset-4 hover:underline">
                     Lupa password?
-                  </RouterLink>
+                </a>
                 </div>
                  <div class="grid gap-3">
                  
